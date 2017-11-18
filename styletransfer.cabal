@@ -22,6 +22,7 @@ library
                      , tensorflow-core-ops
                      , tensorflow-logging
                      , tensorflow-mnist
+                     , tensorflow-proto
                      , proto-lens 
                      , JuicyPixels >= 3.2.9.1
                      , filepath >= 1.4.1.2
@@ -40,6 +41,7 @@ executable styletransfer-exe
                      , tensorflow-core-ops
                      , tensorflow-logging
                      , tensorflow-mnist
+                     , tensorflow-proto
                      , proto-lens 
                      , JuicyPixels >= 3.2.9.1
                      , filepath >= 1.4.1.2
