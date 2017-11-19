@@ -24,9 +24,7 @@ listFromImage path = do
   let img = cleanImg eimg
   let list = case img of (Image _ _ imageData) ->  V.toList imageData
   let width = case img of (Image width _ _) ->  width
-  print width
   let height = case img of (Image _ height _) ->  height
-  print height
   let newList = ((splitEvery height) . (splitEvery channels) . convertWF) list 
   return newList
 
@@ -40,10 +38,10 @@ convertWF ws = [ (fromIntegral w) :: Float | w <- ws]
 convertFW :: [Float] -> [Word8]
 convertFW fs = [ (round f) :: Word8 | f <- fs]
 
-imageFromList :: [[[Float]]] -> Path -> IO ()
+imageFromList :: [Float] -> Path -> IO ()
 imageFromList list path = do 
-  let width = length list
-  let height = length $ head list
-  let newList = (convertFW . concat . concat) list
-  let image = ImageRGB8 (Image width height (V.fromList newList))
+ -- let width = length list
+ -- let height = length $ head list
+  let newList = convertFW list
+  let image = ImageRGB8 (Image 224 224 (V.fromList newList))
   savePngImage path image

@@ -1,0 +1,90 @@
+[1 of 2] Compiling Main             ( /home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/downloaded/467ejlD2Y3dd/tensorflow-mnist-input-data/Setup.hs, /home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/downloaded/467ejlD2Y3dd/tensorflow-mnist-input-data/.stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/setup/Main.o )
+[2 of 2] Compiling StackSetupShim   ( /home/johannes/.stack/setup-exe-src/setup-shim-mPHDZzAJ.hs, /home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/downloaded/467ejlD2Y3dd/tensorflow-mnist-input-data/.stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/setup/StackSetupShim.o )
+Linking /home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/downloaded/467ejlD2Y3dd/tensorflow-mnist-input-data/.stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/setup/setup ...
+Downloading http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+Downloading http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+Downloading http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+Downloading http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+Sending:
+GET /exdb/mnist/train-images-idx3-ubyte.gz HTTP/1.1
+Host: yann.lecun.com
+Content-Length: 0
+User-Agent: haskell-HTTP/4000.3.7
+
+
+Creating new connection to yann.lecun.com
+Received:
+HTTP/1.1 200 OK 
+Date: Sat, 18 Nov 2017 20:30:25 GMT
+Server: Apache/2.4.18 (Ubuntu)
+Last-Modified: Fri, 21 Jul 2000 18:20:24 GMT
+ETag: "974066-36cf0267fea00"
+Accept-Ranges: bytes
+Content-Length: 9912422
+Content-Type: application/x-gzip
+
+
+Sending:
+GET /exdb/mnist/train-labels-idx1-ubyte.gz HTTP/1.1
+Host: yann.lecun.com
+Content-Length: 0
+User-Agent: haskell-HTTP/4000.3.7
+
+
+Creating new connection to yann.lecun.com
+Received:
+HTTP/1.1 200 OK 
+Date: Sat, 18 Nov 2017 20:30:30 GMT
+Server: Apache/2.4.18 (Ubuntu)
+Last-Modified: Fri, 21 Jul 2000 18:20:27 GMT
+ETag: "70d1-36cf026adb0c0"
+Accept-Ranges: bytes
+Content-Length: 28881
+Content-Type: application/x-gzip
+
+
+Sending:
+GET /exdb/mnist/t10k-images-idx3-ubyte.gz HTTP/1.1
+Host: yann.lecun.com
+Content-Length: 0
+User-Agent: haskell-HTTP/4000.3.7
+
+
+Creating new connection to yann.lecun.com
+Received:
+HTTP/1.1 200 OK 
+Date: Sat, 18 Nov 2017 20:30:31 GMT
+Server: Apache/2.4.18 (Ubuntu)
+Last-Modified: Fri, 21 Jul 2000 18:19:56 GMT
+ETag: "1928ed-36cf024d4ab00"
+Accept-Ranges: bytes
+Content-Length: 1648877
+Content-Type: application/x-gzip
+
+
+Sending:
+GET /exdb/mnist/t10k-labels-idx1-ubyte.gz HTTP/1.1
+Host: yann.lecun.com
+Content-Length: 0
+User-Agent: haskell-HTTP/4000.3.7
+
+
+Creating new connection to yann.lecun.com
+Received:
+HTTP/1.1 200 OK 
+Date: Sat, 18 Nov 2017 20:30:32 GMT
+Server: Apache/2.4.18 (Ubuntu)
+Last-Modified: Fri, 21 Jul 2000 18:20:05 GMT
+ETag: "11be-36cf0255dff40"
+Accept-Ranges: bytes
+Content-Length: 4542
+Content-Type: application/x-gzip
+
+
+Configuring tensorflow-mnist-input-data-0.1.0.0...
+Preprocessing library tensorflow-mnist-input-data-0.1.0.0...
+[1 of 2] Compiling Paths_tensorflow_mnist_input_data ( .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/autogen/Paths_tensorflow_mnist_input_data.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Paths_tensorflow_mnist_input_data.o )
+[2 of 2] Compiling TensorFlow.Examples.MNIST.InputData ( src/TensorFlow/Examples/MNIST/InputData.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/TensorFlow/Examples/MNIST/InputData.o )
+Installing library in
+/home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/install/x86_64-linux-nopie/lts-9.13/8.0.2/lib/x86_64-linux-ghc-8.0.2/tensorflow-mnist-input-data-0.1.0.0-IhOe5EsZKPy2oP1GEheqzD
+Registering tensorflow-mnist-input-data-0.1.0.0...

@@ -1,0 +1,14 @@
+Configuring snappy-0.2.0.2...
+Building snappy-0.2.0.2...
+Preprocessing library snappy-0.2.0.2...
+[1 of 3] Compiling Codec.Compression.Snappy.Internal ( Codec/Compression/Snappy/Internal.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Codec/Compression/Snappy/Internal.o )
+[2 of 3] Compiling Codec.Compression.Snappy.Lazy ( .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Codec/Compression/Snappy/Lazy.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Codec/Compression/Snappy/Lazy.o )
+
+Codec/Compression/Snappy/Lazy.hsc:52:10: warning: [-Wmissing-methods]
+    • No explicit implementation for
+        either ‘peek’ or ‘peekElemOff’ or ‘peekByteOff’
+    • In the instance declaration for ‘Storable BS’
+[3 of 3] Compiling Codec.Compression.Snappy ( Codec/Compression/Snappy.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Codec/Compression/Snappy.o )
+Installing library in
+/home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/install/x86_64-linux-nopie/lts-9.13/8.0.2/lib/x86_64-linux-ghc-8.0.2/snappy-0.2.0.2-JmBPG2tqLTy4WK0LWtFxMV
+Registering snappy-0.2.0.2...

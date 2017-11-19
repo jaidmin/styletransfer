@@ -1,0 +1,14 @@
+Configuring proto-lens-0.2.2.0...
+Building proto-lens-0.2.2.0...
+Preprocessing library proto-lens-0.2.2.0...
+[1 of 8] Compiling Data.ProtoLens.TextFormat.Parser ( src/Data/ProtoLens/TextFormat/Parser.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/TextFormat/Parser.o )
+[2 of 8] Compiling Data.ProtoLens.Message.Enum ( src/Data/ProtoLens/Message/Enum.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/Message/Enum.o )
+[3 of 8] Compiling Data.ProtoLens.Message ( src/Data/ProtoLens/Message.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/Message.o )
+[4 of 8] Compiling Data.ProtoLens.TextFormat ( src/Data/ProtoLens/TextFormat.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/TextFormat.o )
+[5 of 8] Compiling Data.ProtoLens.Encoding.Bytes ( src/Data/ProtoLens/Encoding/Bytes.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/Encoding/Bytes.o )
+[6 of 8] Compiling Data.ProtoLens.Encoding.Wire ( src/Data/ProtoLens/Encoding/Wire.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/Encoding/Wire.o )
+[7 of 8] Compiling Data.ProtoLens.Encoding ( src/Data/ProtoLens/Encoding.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens/Encoding.o )
+[8 of 8] Compiling Data.ProtoLens   ( src/Data/ProtoLens.hs, .stack-work/dist/x86_64-linux-nopie/Cabal-1.24.2.0/build/Data/ProtoLens.o )
+Installing library in
+/home/johannes/Software/Devel/Haskell/styletransfer/.stack-work/install/x86_64-linux-nopie/lts-9.13/8.0.2/lib/x86_64-linux-ghc-8.0.2/proto-lens-0.2.2.0-k0itFl0Q1s6AhDjyGUZAG
+Registering proto-lens-0.2.2.0...
