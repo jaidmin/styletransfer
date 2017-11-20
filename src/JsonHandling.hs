@@ -1,7 +1,9 @@
 {-# LANGUAGE DeriveGeneric, OverloadedStrings #-}
 
 module JsonHandling
-    ( Weights (..)
+    ( Weights (..),
+      getJSON
+    , readWeights
     ) where
 
 import Data.Aeson
@@ -10,6 +12,12 @@ import qualified Data.ByteString.Lazy as B
 
 getJSON :: FilePath -> IO B.ByteString
 getJSON = B.readFile 
+
+readWeights :: FilePath -> IO Weights
+readWeights path =fmap maybeToVal (fmap decode (getJSON path))
+
+maybeToVal :: Maybe a -> a
+maybeToVal (Just x) = x
 
 data Weights = 
   Weights { conv1_1_W :: [[[[Float]]]]
