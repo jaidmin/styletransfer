@@ -1,0 +1,44 @@
+{-# LANGUAGE DeriveGeneric, OverloadedStrings #-}
+
+module JsonHandling
+    ( Weights (..)
+    ) where
+
+import Data.Aeson
+import GHC.Generics
+import qualified Data.ByteString.Lazy as B
+
+getJSON :: FilePath -> IO B.ByteString
+getJSON = B.readFile 
+
+data Weights = 
+  Weights { conv1_1_W :: [[[[Float]]]]
+        , conv1_2_W :: [[[[Float]]]]
+        , conv2_1_W :: [[[[Float]]]]
+        , conv2_2_W :: [[[[Float]]]]
+        , conv3_1_W :: [[[[Float]]]]
+        , conv3_2_W :: [[[[Float]]]]
+        , conv3_3_W :: [[[[Float]]]]
+        , conv4_1_W :: [[[[Float]]]]
+        , conv4_2_W :: [[[[Float]]]]
+        , conv4_3_W :: [[[[Float]]]]
+        , conv5_1_W :: [[[[Float]]]]
+        , conv5_2_W :: [[[[Float]]]]
+        , conv5_3_W :: [[[[Float]]]]
+        , conv1_1_b :: [Float]
+        , conv1_2_b :: [Float]
+        , conv2_1_b :: [Float]
+        , conv2_2_b :: [Float]
+        , conv3_1_b :: [Float]
+        , conv3_2_b :: [Float]
+        , conv3_3_b :: [Float]
+        , conv4_1_b :: [Float]
+        , conv4_2_b :: [Float]
+        , conv4_3_b :: [Float]
+        , conv5_1_b :: [Float]
+        , conv5_2_b :: [Float]
+        , conv5_3_b :: [Float]
+        } deriving (Show, Generic)
+
+instance FromJSON Weights
+instance ToJSON Weights
