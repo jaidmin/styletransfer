@@ -8,8 +8,8 @@ extra-lib-dirs:
 - /usr/lib64
 packages:
 - location:
-    git: https://github.com/tensorflow/haskell.git
-    commit: cbd607f4d6515cd95a7fd85de43d523c31467bae
+    git: https://github.com/jaidmin/haskell.git
+    commit: b5d1d97b9ade902ab0fc67e8dc1b6959fe8e62a1 
   subdirs:
   - tensorflow
   - tensorflow-ops
