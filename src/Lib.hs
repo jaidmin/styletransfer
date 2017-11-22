@@ -152,7 +152,7 @@ mainLib = do
 
   -- read weights from json
   Trace.traceIO "Starting to load the weighs!"
-  weights <- Json.readWeights "/home/johannes/has/styletransfer/src/weights_flat.json"
+  weights <- Json.readWeights "./src/weights_flat.json"
   Trace.traceIO "Weights loaded! "
   Trace.traceIO ("size: " ++ (show imgsize) ++ "length imglist: " ++ (show $ length imgList) ++ "legnth styleList: " ++ (show $ length styleList) )
   --create and save output
