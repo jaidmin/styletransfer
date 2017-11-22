@@ -45,11 +45,7 @@ convertFW fs = [ (round f) :: Word8 | f <- fs]
 imageFromList :: [Float] -> Int -> Path -> IO ()
 imageFromList list size path = do
   let newList = convertFW list
-<<<<<<< HEAD
-  let image = ImageRGB8 (Image 448 448 (V.fromList newList))
-=======
   let image = ImageRGB8 (Image size size (V.fromList newList))
->>>>>>> be98fea54aa24c1a1fba0b98afbc1cf9e397f426
   savePngImage path image
 
 transformImg :: Int -> Int -> [Float] -> ([Float], Int)
