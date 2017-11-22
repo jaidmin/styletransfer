@@ -32,4 +32,5 @@ extra-deps:
 - snappy-framing-0.1.1
 - tensorflow-records-0.1.0.0
 - tensorflow-records-conduit-0.1.0.0
+- l-bfgs-b-0.1.0.1
 resolver: lts-9.13

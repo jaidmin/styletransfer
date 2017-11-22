@@ -12,7 +12,7 @@ import Data.List
 cleanImg :: Either String DynamicImage -> Image PixelRGB8
 cleanImg (Left err) =  error "Could not read Image"
 cleanImg (Right img)  =  convertRGB8 img
-   
+
 type Path = String
 
 channels :: Int
@@ -25,7 +25,7 @@ listFromImage path = do
   let list = case img of (Image _ _ imageData) ->  V.toList imageData
   let width = case img of (Image width _ _) ->  width
   let height = case img of (Image _ height _) ->  height
-  let newList = ((splitEvery height) . (splitEvery channels) . convertWF) list 
+  let newList = ((splitEvery height) . (splitEvery channels) . convertWF) list
   return newList
 
 splitEvery :: Int -> [a] -> [[a]]
@@ -43,5 +43,5 @@ imageFromList list path = do
  -- let width = length list
  -- let height = length $ head list
   let newList = convertFW list
-  let image = ImageRGB8 (Image 224 224 (V.fromList newList))
+  let image = ImageRGB8 (Image 448 448 (V.fromList newList))
   savePngImage path image
