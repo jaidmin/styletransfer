@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric, OverloadedStrings #-}
 
+--exporting all the relevant functions and data constructors
 module JsonHandling
     ( Weights (..),
       getJSON
@@ -10,11 +11,13 @@ import Data.Aeson
 import GHC.Generics
 import qualified Data.ByteString.Lazy as B
 
+--read a Json file from a specified filePath
 getJSON :: FilePath -> IO B.ByteString
 getJSON = B.readFile 
 
+--
 readWeights :: FilePath -> IO Weights
-readWeights path =fmap maybeToVal (fmap decode (getJSON path))
+readWeights = fmap maybeToVal . fmap decode . getJSON
 
 maybeToVal :: Maybe a -> a
 maybeToVal (Just x) = x
