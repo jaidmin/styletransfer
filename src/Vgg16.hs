@@ -352,23 +352,23 @@ vgg16 weightDict input = Vgg16 {
 
 
 
-vgg16test :: Json.Weights -> TBF -> TF.Build (TBI32)
-vgg16test weightDict input = do
-  return $ TFops.shape  (conv5_1 $ vgg16 weightDict input)
-
-vgg16testsession :: Json.Weights -> [Float]  -> TF.Session (V.Vector I.Int32)
-vgg16testsession weightDict imgList = do
-  
-  let imgTensor = TFops.constant (TF.Shape ([1,224,224,3] :: [I.Int64])) (imgList)
-
-  result <- TF.build (vgg16test weightDict imgTensor)
-  TF.run result
-
-vgg16testio :: IO()
-vgg16testio = do
-  weightDict <- Json.readWeights "/home/johannes/has/styletransfer/src/weights_flat.json"
-  imgList <- Img.listFromImage "/home/johannes/has/styletransfer/owl.jpeg"
-  result <- TFsess.runSession (vgg16testsession weightDict (concat $ concat $imgList))
-  print result
-  putStrLn "hallo"
+--vgg16test :: Json.Weights -> TBF -> TF.Build (TBI32)
+--vgg16test weightDict input = do
+--  return $ TFops.shape  (conv5_1 $ vgg16 weightDict input)
+--
+--vgg16testsession :: Json.Weights -> [Float]  -> TF.Session (V.Vector I.Int32)
+--vgg16testsession weightDict imgList = do
+--  
+--  let imgTensor = TFops.constant (TF.Shape ([1,224,224,3] :: [I.Int64])) (imgList)
+--
+--  result <- TF.build (vgg16test weightDict imgTensor)
+--  TF.run result
+--
+--vgg16testio :: IO()
+--vgg16testio = do
+--  weightDict <- Json.readWeights "/home/johannes/has/styletransfer/src/weights_flat.json"
+--  imgList <- Img.listFromImage "/home/johannes/has/styletransfer/owl.jpeg"
+--  result <- TFsess.runSession (vgg16testsession weightDict (concat $ concat $imgList))
+--  print result
+--  putStrLn "hallo"
 

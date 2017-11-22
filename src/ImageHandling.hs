@@ -1,7 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module ImageHandling
-    ( listFromImage, imageFromList
+    ( listFromImage, imageFromList, loadTwoImages
     ) where
 
 import Codec.Picture
@@ -21,20 +22,19 @@ type Path = String
 channels :: Int
 channels = 3
 
-listFromImage :: Path -> IO ([[[Float]]], Int)
+getImgData :: Image PixelRGB8 -> [Float]
+getImgData (Image _ _ imageData) = convertWF $ V.toList (imageData)
+
+listFromImage :: Path -> IO ([Float], Int)
 listFromImage path = do
   eimg <- readImage path
   let img = cleanImg eimg
-      oneDimList = case img of (Image _ _ imageData) ->  V.toList imageData
-      width = case img of (Image width _ _) ->  width
-      height = case img of (Image _ height _) ->  height
-      (transformedList, size) = transformImg width height (convertWF oneDimList)
-      threeDimList = ((splitEvery height) . (splitEvery channels)) transformedList
-  return (threeDimList, size)
-
-splitEvery :: Int -> [a] -> [[a]]
-splitEvery _ [] = []
-splitEvery x ls = take x ls : splitEvery x (drop x ls)
+      width = imageWidth img
+      height = imageHeight img
+      (transformedImg :: Image PixelRGB8) = if width /= height then cropAndResize img else img
+      imgData = getImgData transformedImg
+      size = imageWidth transformedImg
+  return (imgData, size)
 
 convertWF :: [Word8] -> [Float]
 convertWF ws = [ (fromIntegral w) :: Float | w <- ws]
@@ -46,54 +46,47 @@ imageFromList :: [Float] -> Int -> Path -> IO ()
 imageFromList list size path = do
   let newList = convertFW list
   let image = ImageRGB8 (Image size size (V.fromList newList))
-  savePngImage path image
-
-transformImg :: Int -> Int -> [Float] -> ([Float], Int)
-transformImg width height img
-  | (3/4) < ratio && ratio <   1   = ((resizeWRT width dim img), width)
-  |         ratio ==  1            = (img, width)
-  |   1   < ratio && ratio < (4/3) = ((resizeWRT height dim img), height)
-  | otherwise                      = cropAndResize dim img
-  where
-    ratio = ((fromIntegral width) / (fromIntegral height)) :: Float
-    dim = (width, height) :: (Int, Int)
+  saveJpgImage 100 path image
 
 
-cropAndResize :: (Int, Int) -> [Float] -> ([Float], Int)
-cropAndResize (width, height) list
-  | width < height = (resizeWRT width (width, height) (convertWF cropHeight), width)
-  | width > height = (resizeWRT height (width, height) (convertWF cropWidth), height)
-  where
-    w = fromIntegral width
-    h = fromIntegral height
-    x = round ((w - (h * 4/3)) / 2)
-    y = round ((h - (w * 4/3)) / 2)
-    img = ImageRGB8 (Image width height (V.fromList $ convertFW list))
-    getList (Image _ _ x) = V.toList x
-    cropHeight = getList $ CPE.crop 0 y width (round (w * 4/3)) (convertRGB8 img)
-    cropWidth  = getList $ CPE.crop x 0 (round (h * 4/3)) height (convertRGB8 img)
+cropTest :: IO (String)
+cropTest = do
+  let filepath = "./obamabig.jpeg"
+  img <- readImage filepath
 
-resizeWRT :: Int -> (Int, Int) -> [Float] -> [Float]
-resizeWRT size (width, height) list = convertWF $ getList (CPE.scaleBilinear size size img)
-  where
-    img = Image width height (V.fromList $ convertFW list)
-    getList (Image _ _ x) = V.toList x
+  let new_img = cropAndResize  (cleanImg img)
+  saveJpgImage 100 "test.jpg"  ((ImageRGB8 new_img))
+  
+  return "HALLO"
 
+cropAndResize :: Image PixelRGB8 -> Image PixelRGB8
+cropAndResize img = CPE.scaleBilinear (floor size) (floor size) (CPE.crop (floor x)  (floor y) (floor new_width) (floor new_height) img)
+   where
+     (size :: Float) = if new_width < new_height then new_width else new_height
+     (new_width :: Float) = if width < height then width else height * (4/3)
+     (new_height :: Float) = if height < width then height else width * (4/3)
+     (width :: Float) = fromIntegral  $ imageWidth img
+     (height :: Float) = fromIntegral $ imageHeight img
+     (x :: Float) = if width < height then 0 else  ((width - (height * 4/3)) / 2)
+     (y :: Float) = if width > height then 0 else  ((height - (width * 4/3)) / 2)
 
+loadTwoImages :: FilePath -> FilePath -> IO (Int, [Float], [Float])
+loadTwoImages path1 path2 = do
+  eimg1 <- readImage path1
+  eimg2 <- readImage path2
+  let
+    img1 = cleanImg eimg1
+    img2 = cleanImg eimg2
+    width1 = imageWidth img1
+    width2 = imageWidth img2
+    height1 = imageHeight img1
+    height2 = imageHeight img2
+    (transformedImg1 :: Image PixelRGB8) = if width1 /= height1 then cropAndResize img1 else img1
+    (transformedImg2 :: Image PixelRGB8) = if width2 /= height2 then cropAndResize img2 else img2
+    new_size1 = imageHeight transformedImg1
+    new_size2 = imageHeight transformedImg2
+    (transformedImg1New :: Image PixelRGB8) = if new_size1 > new_size2 then CPE.scaleBilinear new_size2 new_size2 transformedImg1 else transformedImg1
+    (transformedImg2New :: Image PixelRGB8) = if new_size2 > new_size2 then CPE.scaleBilinear new_size1 new_size1 transformedImg2 else transformedImg2
+    new_size = if new_size1 <= new_size2 then new_size1 else new_size2
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return (new_size, (getImgData transformedImg1New), (getImgData transformedImg2New))

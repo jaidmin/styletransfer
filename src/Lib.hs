@@ -19,7 +19,6 @@ import System.Environment (getArgs)
 import qualified System.Random as R
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Char8 as B
-import Numeric.LBFGSB as LBFGS
 
 --debug
 import Debug.Trace as Trace
@@ -87,13 +86,13 @@ styleloss shape block styleTensorConv randTensorConv = mse (gramMatrix styleTens
 update :: Float -> TBF -> [TFvar.Variable Float] -> TF.Build (TF.ControlNode)
 update lr loss vars = TFmin.minimizeWith (TFmin.gradientDescent lr) loss vars
 
-session :: Json.Weights -> V.Vector Float -> V.Vector Float -> Int -> TFsess.Session ( V.Vector Float)
-session weights imgVector styleVector steps = do
+session :: Json.Weights -> Int -> V.Vector Float -> V.Vector Float -> Int -> TFsess.Session ( V.Vector Float)
+session weights imgsize imgVector styleVector steps = do
 
   let
     seed = 123456
-    imgSize = 448
-    (imgSizeI64 :: I.Int64) = 448
+    imgSize = imgsize
+    (imgSizeI64 :: I.Int64) = fromIntegral imgSize
    -- randList = (Prelude.take 150528 (R.randomRs (0,255) (R.mkStdGen seed)) :: [Float])
     randList = [122.5 | _ <- [1..(imgSize * imgSize * 3)]]
 
@@ -120,22 +119,12 @@ session weights imgVector styleVector steps = do
       randTensorConv5 = Vgg16.conv5_1 $ Vgg16.vgg16 weights randTensor
 
       contentLoss = ((contentloss imgTensorConv4 randTensorConv4)) {- `TFops.add` (contentloss imgTensorConv3 randTensorConv3)) -}`TFops.div` 50
-      ---just trying things
-      --- lbfgs is now here !!!
-      ---- write vgg loss that takes vec double and returns double ?
-      ----      write gradientFuntion that takes vec double and returns vec double
-     ---  lbfgs not possible to use
-      
-     
-
       --styleLoss = ((styleloss1 styleTensorConv1 randTensorConv1) `TFops.add`  (styleloss2 styleTensorConv2 randTensorConv2) `TFops.add` (styleloss3 styleTensorConv3 randTensorConv3) ) `TFops.div` 3
       styleLoss = ((styleloss imgSize 1 styleTensorConv1 randTensorConv1)) `TFops.add` (styleloss imgSize 2 styleTensorConv2 randTensorConv2) -- `TFops.add` (styleloss imgSize 3 styleTensorConv3 randTensorConv3)) 
       thisloss = contentLoss `TFops.add`  styleLoss
 
   let admcfg = TFmin.AdamConfig 0.1 0.9 0.999 1e-8
 
-  
- 
   updateAll <- TFmin.minimizeWith (TFmin.adam' admcfg) thisloss [randVar]
   let trainstepAll = TF.run updateAll
   forM_ ([0..(steps)] :: [Int]) $ \i -> do
@@ -144,24 +133,6 @@ session weights imgVector styleVector steps = do
       (styleLossRightNow :: V.Vector Float) <- TF.run styleLoss
       (contentLossRightNow :: V.Vector Float) <- TF.run contentLoss
       liftIO $ putStrLn $ "step: " ++ (show i) ++ " styleloss: " ++ (show styleLossRightNow) ++ " contentloss: " ++ (show contentLossRightNow)
-
-  updateStyle <- TFmin.minimizeWith (TFmin.adam' admcfg) styleLoss [randVar]
-  let trainstepStyle = TF.run updateStyle
-
-  forM_ ([0.. (steps)] :: [Int]) $ \i -> do
-    trainstepStyle
-    when  (i `mod` 100 == 0) $ do
-      (styleLossRightNow :: V.Vector Float) <- TF.run styleLoss
-      (contentLossRightNow :: V.Vector Float) <- TF.run contentLoss
-      liftIO $ putStrLn $ "step: " ++ (show i) ++ " styleloss: " ++ (show styleLossRightNow) ++ " contentloss: " ++ (show contentLossRightNow)
-
-  forM_ ([0..(steps)] :: [Int]) $ \i -> do
-    trainstepAll
-    when  (i `mod` 100 == 0) $ do
-      (styleLossRightNow :: V.Vector Float) <- TF.run styleLoss
-      (contentLossRightNow :: V.Vector Float) <- TF.run contentLoss
-      liftIO $ putStrLn $ "step: " ++ (show i) ++ " styleloss: " ++ (show styleLossRightNow) ++ " contentloss: " ++ (show contentLossRightNow)
-
 
   let output = (TFvar.readValue randVar)
   TF.run output
@@ -173,23 +144,23 @@ mainLib = do
   let seed = 14783
 
   [imgPath, stylePath, savePath, steps] <- getArgs
-  imgList <- Img.listFromImage imgPath
-  styleList <- Img.listFromImage stylePath
+  (imgsize, imgList, styleList) <- Img.loadTwoImages imgPath stylePath
   let (stepsInt :: Int) =round $ read steps
 
-  let imgVec = V.fromList $ Prelude.concat $ Prelude.concat imgList :: V.Vector Float
-  let styleVec = V.fromList $ Prelude.concat $ Prelude.concat styleList :: V.Vector Float
+  let imgVec = V.fromList  imgList :: V.Vector Float
+  let styleVec = V.fromList styleList :: V.Vector Float
 
   -- read weights from json
   Trace.traceIO "Starting to load the weighs!"
   weights <- Json.readWeights "/home/johannes/has/styletransfer/src/weights_flat.json"
   Trace.traceIO "Weights loaded! "
+  Trace.traceIO ("size: " ++ (show imgsize) ++ "length imglist: " ++ (show $ length imgList) ++ "legnth styleList: " ++ (show $ length styleList) )
   --create and save output
 
-  output <- TF.runSession (session weights imgVec styleVec stepsInt)
+  output <- TF.runSession (session weights imgsize imgVec styleVec stepsInt)
  -- let processed_output = map (*255) (V.toList output)
   let processed_output = V.toList output
-  Img.imageFromList processed_output (savePath Prelude.++ ".jpeg")
+  Img.imageFromList processed_output imgsize (savePath Prelude.++ ".jpeg")
   --imageFromList (toList outVec2) (savePath Prelude.++ "2.jpeg")
 
   putStrLn "executed"
