@@ -8,6 +8,9 @@ RUN apt-get update
 RUN apt-get install -y \
         # Required by snappy-frames dependency.
         libsnappy-dev \
+        git \
+        happy \
+        alex \
         # Avoids /usr/bin/ld: cannot find -ltinfo
         libncurses5-dev \
         # Makes stack viable in the container
