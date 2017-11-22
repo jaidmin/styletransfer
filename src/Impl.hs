@@ -102,9 +102,8 @@ session weights imgsize imgVector styleVector steps = do
       styleTensorConv3 = Vgg16.conv3_1 $ Vgg16.vgg16 weights styleTensor
       randTensorConv4 = Vgg16.conv4_1 $ Vgg16.vgg16 weights randTensor
       randTensorConv5 = Vgg16.conv5_1 $ Vgg16.vgg16 weights randTensor
-      contentLoss = ((contentloss imgTensorConv4 randTensorConv4)) {- `TFops.add` (contentloss imgTensorConv3 randTensorConv3)) -}`TFops.div` 50
-      --styleLoss = ((styleloss1 styleTensorConv1 randTensorConv1) `TFops.add`  (styleloss2 styleTensorConv2 randTensorConv2) `TFops.add` (styleloss3 styleTensorConv3 randTensorConv3) ) `TFops.div` 3
-      styleLoss = ((styleloss imgSize 1 styleTensorConv1 randTensorConv1)) `TFops.add` (styleloss imgSize 2 styleTensorConv2 randTensorConv2) -- `TFops.add` (styleloss imgSize 3 styleTensorConv3 randTensorConv3)) 
+      contentLoss = ((contentloss imgTensorConv4 randTensorConv4)) `TFops.div` 50
+      styleLoss = ((styleloss imgSize 1 styleTensorConv1 randTensorConv1)) `TFops.add` (styleloss imgSize 2 styleTensorConv2 randTensorConv2)  `TFops.add` (styleloss imgSize 3 styleTensorConv3 randTensorConv3)
       thisloss = contentLoss `TFops.add`  styleLoss
       admcfg = TFmin.AdamConfig 0.1 0.9 0.999 1e-8
 
