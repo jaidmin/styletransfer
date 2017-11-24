@@ -46,8 +46,7 @@ type TBF = TF.Tensor TF.Build Float
 type TBI64= TF.Tensor TF.Build I.Int64
 type TBI32= TF.Tensor TF.Build I.Int32
 
-
-
+--helper function
 shapeInBlock :: Int -> Int -> (Int,Int)
 shapeInBlock shape 1  = (shape, 64)
 shapeInBlock shape 2  = (shape `div`2 , 128)
@@ -55,6 +54,7 @@ shapeInBlock shape 3  = ((shape `div`2) `div` 2 , 256)
 shapeInBlock shape 4  = (((shape `div`2) `div` 2) `div` 2 , 256 )
 shapeInBlock shape 5  = ((((shape `div`2) `div` 2) `div` 2) `div` 2 , 512)
 
+-- loss function 
 mse :: TBF -> TBF -> TBF
 mse pre targ = TFops.reduceMean $ TFops.square (pre `TFops.sub` targ)
 
@@ -74,13 +74,11 @@ gramMatrix inp shape block = (inp_flat `TFops.matMul` (TFops.transpose inp_flat 
 styleloss :: Int -> Int -> TBF -> TBF -> TBF
 styleloss shape block styleTensorConv randTensorConv = mse (gramMatrix styleTensorConv shape block) (gramMatrix randTensorConv shape block)
 
-update :: Float -> TBF -> [TFvar.Variable Float] -> TF.Build (TF.ControlNode)
-update lr loss vars = TFmin.minimizeWith (TFmin.gradientDescent lr) loss vars
-
+-- tensorflow session that is executed in mainLib
 session :: Json.Weights -> Int -> V.Vector Float -> V.Vector Float -> Int -> TFsess.Session ( V.Vector Float)
 session weights imgsize imgVector styleVector steps = do
   let
-      seed = 123456
+      seed = 1714654
       imgSize = imgsize
       (imgSizeI64 :: I.Int64) = fromIntegral imgSize
       randList = [122.5 | _ <- [1..(imgSize * imgSize * 3)]]
@@ -106,6 +104,16 @@ session weights imgsize imgVector styleVector steps = do
       styleLoss = ((styleloss imgSize 1 styleTensorConv1 randTensorConv1)) `TFops.add` (styleloss imgSize 2 styleTensorConv2 randTensorConv2)  `TFops.add` (styleloss imgSize 3 styleTensorConv3 randTensorConv3)
       thisloss = contentLoss `TFops.add`  styleLoss
       admcfg = TFmin.AdamConfig 0.1 0.9 0.999 1e-8
+
+  updateStyle <- TFmin.minimizeWith (TFmin.adam' admcfg) styleLoss [randVar]
+  let trainstepAll = TF.run updateStyle
+  forM_ ([0..(steps `div` 3)] :: [Int]) $ \i -> do
+    trainstepAll
+    when  (i `mod` 100 == 0) $ do
+      (styleLossRightNow :: V.Vector Float) <- TF.run styleLoss
+      (contentLossRightNow :: V.Vector Float) <- TF.run contentLoss
+      liftIO $ putStrLn $ "step: " ++ (show i) ++ " styleloss: " ++ (show styleLossRightNow) ++ " contentloss: " ++ (show contentLossRightNow)
+
 
   updateAll <- TFmin.minimizeWith (TFmin.adam' admcfg) thisloss [randVar]
   let trainstepAll = TF.run updateAll

@@ -8,6 +8,8 @@ RUN apt-get update
 RUN apt-get install -y \
         # stack needs git
         git \
+        happy \
+        alex \
         # Required by snappy-frames dependency.
         libsnappy-dev \
         # Avoids /usr/bin/ld: cannot find -ltinfo

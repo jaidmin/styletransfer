@@ -51,13 +51,12 @@ imageFromList list size path = do
 
 cropTest :: IO (String)
 cropTest = do
-  let filepath = "./obamabig.jpeg"
+  let filepath = "./obamabig.jpg"
   img <- readImage filepath
 
   let new_img = cropAndResize  (cleanImg img)
   saveJpgImage 100 "test.jpg"  ((ImageRGB8 new_img))
-  
-  return "HALLO"
+  return "test successful"
 
 cropAndResize :: Image PixelRGB8 -> Image PixelRGB8
 cropAndResize img = CPE.scaleBilinear (floor size) (floor size) (CPE.crop (floor x)  (floor y) (floor new_width) (floor new_height) img)
